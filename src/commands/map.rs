@@ -1,7 +1,7 @@
 use reqwest::Client;
 
 use crate::{
-    displays::table::display_table,
+    displays::map::display_map,
     error::AppError,
     filters::{
         distance::{filter_by_distance, sort_by_distance},
@@ -11,14 +11,14 @@ use crate::{
     models::location::Coordinates,
 };
 
-struct WindowCommandConfig {
+struct MapCommandConfig {
     max_distance_in_km: Option<f64>,
     window_direction: Option<f64>,
     field_of_view: Option<f64>,
 }
 
 pub async fn handle(args: &[String]) -> Result<(), AppError> {
-    let config = WindowCommandConfig::from_args(args)?;
+    let config = MapCommandConfig::from_args(args)?;
     let max_distance_in_km = config.max_distance()?;
     let window_direction = config.window_direction()?;
     let field_of_view = config.field_of_view()?;
@@ -35,14 +35,16 @@ pub async fn handle(args: &[String]) -> Result<(), AppError> {
     flights = filter_by_window(flights, origin, window_direction, field_of_view);
     flights = sort_by_distance(flights);
 
-    display_table(flights);
+    let flight = flights.first();
+
+    display_map(flight);
 
     Ok(())
 }
 
-impl WindowCommandConfig {
+impl MapCommandConfig {
     fn from_args(args: &[String]) -> Result<Self, AppError> {
-        let mut config = WindowCommandConfig {
+        let mut config = MapCommandConfig {
             max_distance_in_km: None,
             window_direction: None,
             field_of_view: None,

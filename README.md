@@ -2,8 +2,6 @@
 
 ADS-B flight radar built in Rust. It uses data from a local `dump1090-fa` instance to track nearby aircraft, filter them based on visibility from your window, and visualize them in your terminal.
 
-![screenshot](readme/list-screenshot.png)
-
 ## Features
 
 - Pulls aircraft data from a local ADS-B JSON feed (`dump1090-fa`)
@@ -45,7 +43,9 @@ API_URL=http://192.168.1.x/skyaware/data/aircraft.json
 
 ### List View
 
-This will show a list of all aircrafts that provide valid data and are within the optional `max_distance_in_km` parameter (defaults can be set in the `.env` file):
+![screenshot](readme/list-screenshot.png)
+
+This will show a list of all aircrafts that provide valid data and are within distance limits (defaults can be set in the `.env` file).
 
 ```bash
 cargo run list --max_distance_in_km=50
@@ -53,8 +53,18 @@ cargo run list --max_distance_in_km=50
 
 ### Window View
 
-This will show a list of aircrafts that are within the `field_of_view` and `window_direction` parameters (defaults can be set in the `.env` file):
+This will show a list of aircrafts that are within the specified distance from your window, filtered by the direction and field of view.
 
 ```bash
 cargo run window --max_distance_in_km=10 --window_direction=150 --field_of_view=100
+```
+
+### Map View
+
+![screenshot](readme/map-screenshot.png)
+
+This will show the nearest aircraft information with an arrow pointing in the direction the aircraft is heading.
+
+```bash
+cargo run map --max_distance_in_km=10 --window_direction=150 --field_of_view=100
 ```

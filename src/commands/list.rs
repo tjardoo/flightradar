@@ -1,7 +1,7 @@
 use reqwest::Client;
 
 use crate::{
-    displays::table::table_display,
+    displays::table::display_table,
     error::AppError,
     filters::distance::{filter_by_distance, sort_by_distance},
     flightaware::FlightAware,
@@ -22,7 +22,7 @@ pub async fn handle(args: &[String]) -> Result<(), AppError> {
     flights = filter_by_distance(flights, max_distance_in_km);
     flights = sort_by_distance(flights);
 
-    table_display(flights);
+    display_table(flights);
 
     Ok(())
 }

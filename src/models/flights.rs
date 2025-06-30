@@ -1,4 +1,7 @@
-use crate::{models::location::Coordinates, resources::flightaware::FlightawareFlight};
+use crate::{
+    models::location::Coordinates,
+    resources::flightaware::{Altitude, FlightawareFlight},
+};
 
 #[allow(unused)]
 #[derive(Debug)]
@@ -20,6 +23,10 @@ impl Flight {
         };
 
         if flight.alt_geom.is_none() || flight.mag_heading.is_none() {
+            return None;
+        }
+
+        if let Some(Altitude::Text(_)) = flight.alt_baro {
             return None;
         }
 

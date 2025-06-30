@@ -22,7 +22,7 @@ pub struct FlightawareFlight {
     pub ias: Option<f64>, // indicated airspeed
     pub mach: Option<f64>,
 
-    pub alt_baro: Option<i32>,         // barometric altitude in feet
+    pub alt_baro: Option<Altitude>,    // barometric altitude in feet
     pub alt_geom: Option<i32>,         // geometric altitude
     pub nav_altitude_mcp: Option<i32>, // MCP selected altitude
 
@@ -36,4 +36,12 @@ pub struct FlightawareFlight {
     pub messages: Option<u32>, // message count
 
     pub rssi: Option<f64>, // signal strength
+}
+
+#[allow(unused)]
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Altitude {
+    Feet(i32),
+    Text(String),
 }
