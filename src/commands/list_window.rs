@@ -2,7 +2,7 @@ use reqwest::Client;
 
 use crate::{
     commands::CliConfig,
-    displays::map::display_map,
+    displays::table::display_table,
     error::AppError,
     filters::{
         distance::{filter_by_distance, sort_by_distance},
@@ -30,7 +30,7 @@ pub async fn handle(args: &[String]) -> Result<(), AppError> {
     flights = filter_by_window(flights, origin, window_direction, field_of_view);
     flights = sort_by_distance(flights);
 
-    display_map(&flights);
+    display_table(flights);
 
     Ok(())
 }

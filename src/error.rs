@@ -9,6 +9,7 @@ pub enum AppError {
     Reqwest(reqwest::Error),
     NoCommandProvided,
     UnknownCommand(String),
+    UnknownSubcommand(String, String),
 }
 
 impl Error for AppError {}
@@ -25,6 +26,13 @@ impl Display for AppError {
             AppError::Reqwest(error) => write!(f, "Reqwest error: {}", error),
             AppError::NoCommandProvided => write!(f, "No command provided"),
             AppError::UnknownCommand(command) => write!(f, "Unknown command: {}", command),
+            AppError::UnknownSubcommand(command, subcommand) => {
+                write!(
+                    f,
+                    "Unknown subcommand '{}' for command '{}'",
+                    subcommand, command
+                )
+            }
         }
     }
 }
