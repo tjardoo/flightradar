@@ -15,10 +15,15 @@ pub fn display_window(flight: Option<&Flight>) {
 
     draw_window(&mut stdout, &display);
 
-    if let Some(flight) = flight {
-        let heading = flight.heading % 360.0;
+    let window_direction = std::env::var("WINDOW_DIRECTION")
+        .ok()
+        .and_then(|s| s.parse::<f64>().ok())
+        .unwrap_or(0.0);
 
-        if (45.0..135.0).contains(&heading) || (225.0..315.0).contains(&heading) {
+    if let Some(flight) = flight {
+        let relative_heading = (flight.heading - window_direction + 360.0) % 360.0;
+
+        if (45.0..135.0).contains(&relative_heading) || (225.0..315.0).contains(&relative_heading) {
             // draw vertical line
             for (i, row) in (display.inner_top()..=display.inner_bottom()).enumerate() {
                 if i % 2 == 0 {
@@ -38,7 +43,7 @@ pub fn display_window(flight: Option<&Flight>) {
                 }
             }
 
-            let arrow = if (45.0..135.0).contains(&heading) {
+            let arrow = if (45.0..135.0).contains(&relative_heading) {
                 '↑'
             } else {
                 '↓'
@@ -75,7 +80,7 @@ pub fn display_window(flight: Option<&Flight>) {
                 }
             }
 
-            let arrow = if (135.0..225.0).contains(&heading) {
+            let arrow = if (135.0..225.0).contains(&relative_heading) {
                 '←'
             } else {
                 '→'
