@@ -41,7 +41,13 @@ pub fn display_map(flights: &[Flight]) {
 
     for flight in flights {
         if let Some((x, y)) = display.latlon_to_screen(flight.coordinates.clone(), &bounds) {
-            let arrow = heading_arrow(flight.heading);
+            let arrow = match flight.bearing {
+                h if (45.0..135.0).contains(&h) => '→',
+                h if (135.0..225.0).contains(&h) => '↓',
+                h if (225.0..315.0).contains(&h) => '←',
+                _ => '↑',
+            };
+
             let label = format!("{} {}", arrow, flight.id);
 
             execute!(
@@ -54,20 +60,4 @@ pub fn display_map(flights: &[Flight]) {
     }
 
     stdout.flush().unwrap();
-}
-
-fn heading_arrow(heading: f64) -> char {
-    let window_direction = std::env::var("WINDOW_DIRECTION")
-        .ok()
-        .and_then(|s| s.parse::<f64>().ok())
-        .unwrap_or(0.0);
-
-    let relative_heading = (heading - window_direction + 360.0) % 360.0;
-
-    match relative_heading {
-        h if (45.0..135.0).contains(&h) => '→',
-        h if (135.0..225.0).contains(&h) => '↓',
-        h if (225.0..315.0).contains(&h) => '←',
-        _ => '↑',
-    }
 }
